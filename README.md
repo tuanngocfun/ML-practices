@@ -2,7 +2,7 @@
 
 ## Overview
 
-An e-commerce organization aims to enhance customer experience by implementing a merchant rating system. This system will help customers decide which merchant provides better services by analyzing transaction and merchant data. As a Big Data Expert, your task is to develop this rating system.
+An e-commerce organization aims to enhance customer experience by implementing a merchant rating system. This system will help customers decide which merchant provides better services by analyzing transaction and merchant data. As a Big Data Expert, main task is to develop this rating system.
 
 ## Datasets
 
