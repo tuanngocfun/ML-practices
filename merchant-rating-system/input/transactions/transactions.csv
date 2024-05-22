@@ -1,0 +1,6 @@
+transaction_id,customer_id,merchant_id,timestamp,invoice_number,invoice_amount,segment
+tx1,1001,2001,2024-05-01 12:34:56,INV-001,3000,A
+tx2,1002,2002,2024-05-01 13:45:23,INV-002,7500,B
+tx3,1003,2001,2024-05-02 09:12:33,INV-003,15000,A
+tx4,1004,2003,2024-05-02 10:56:45,INV-004,22000,C
+tx5,1005,2002,2024-05-03 14:23:12,INV-005,500,B
