@@ -4,7 +4,7 @@
 
 In order to run this application, we start with installing the dependencies and libraries using this command:
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
@@ -21,13 +21,13 @@ There are 2 files to create your custom dataset (Pose and Hands), named as `pose
 
 Then run the script with:
 
-```
+```bash
 python3 data_collection/hands_data_generation.py
 ```
 
 or
 
-```
+```bash
 python3 data_collection/pose_data_generation.py
 ```
 
