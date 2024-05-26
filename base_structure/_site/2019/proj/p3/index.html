@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Segmentation</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Course materials and notes for University of Maryland's class CMSC426: Computer Vision.">
+    <link rel="canonical" href="http://localhost:4000/2019/proj/p3/">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+
+    <!-- Google fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+
+    <!-- Google tracking -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-46895817-2', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap title-wrap">
+    <a class="site-title" href="/">CMSC426 Computer Vision</a>
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Segmentation</h1>
+  </header>
+
+  <article class="post-content">
+  <p>Table of Contents:</p>
+<ul>
+  <li><a href="#due">Deadline</a></li>
+  <li><a href="#intro">Introduction</a></li>
+  <li><a href="#system_overview">Implementation Overview</a></li>
+  <li><a href="#sub">Submission Guidelines</a></li>
+  <li><a href="#coll">Collaboration Policy</a></li>
+</ul>
+
+<p><a name="due"></a></p>
+<h2 id="deadline">Deadline</h2>
+<p>11:59PM, Thursday, April 11, 2019</p>
+
+<p><a name="intro"></a></p>
+<h2 id="introduction">Introduction</h2>
+<p>In this project, we’ll implement a graph-based segmentation algorithm, based on Mishra et al.’s
+<a href="https://ieeexplore.ieee.org/abstract/document/5459254">“Active Segmentation with Fixation”</a>.  You’ll understand how segmentation can be framed as a min-cut on a graph, and explore how different image features can be used to assign weights to that graph.</p>
+
+<p>This document just provides an overview of what you need to do.  For a full breakdown of how each step in the pipeline works, <b>see <a href="https://cmsc426spring2019.github.io/graphseg/">the course notes for this project</a></b>.</p>
+
+<p><a name="system_overview"></a></p>
+<h2 id="implementation-overview">Implementation Overview:</h2>
+<p>In fixation-based graph-cut segmentation, the user provides a “fixation point” which identifies the
+target object.  The image is considered to be a graph, where pixels are vertices, each connected to
+its four adjacent neighbors.  Segmentation proceeds in two rounds: in the first round, we weight the
+graph using only an edge probability map (for this project we’ve provided these for you, but they
+can easily be found using an algorithm like gPb).  The second round refines this using image
+features such as color, texture, and (for sequences) optical flow.  (For more details, see the course
+notes.)</p>
+
+<h3 id="what-you-need-to-do">What you need to do:</h3>
+<ul>
+  <li><strong>First segmentation</strong> (binary weights): set up the maxflow graph based on the image and its
+boundary probability map (in “&lt;imgName&gt;_gPb.mat”).  Edges are weighted based on the boundary map, <em>and</em> the edge’s distance from the fixation point.
+    <ul>
+      <li>(<strong>EXTRA CREDIT</strong>: refine the boundary probability map using the optical flow-based method described in section 3 of Mishra et al.)</li>
+      <li>result: rough initial segmentation of the object.</li>
+    </ul>
+  </li>
+  <li><strong>Generate texture response maps</strong>: as described in the course notes, generate a “texture descriptor”
+for each pixel in the image.  (For this project, a simple filter bank using oriented derivative of gaussians is fine.)
+    <ul>
+      <li>(For sequences you must also generate optical flow, but this is just a function call.)</li>
+    </ul>
+  </li>
+  <li><strong>Second segmentation</strong> (unary weights): reweight the graph using some combination of color, texture,
+and optical flow.  The process is very similar for all of them:
+    <ol>
+      <li>Use the rough segmentation from step one to identify foreground and background pixels (in the
+texture response map, the optical flow map, etc.).</li>
+      <li>Train two separate GMMs: one to classify foreground pixels, and another to classify backround
+pixels.</li>
+      <li>Use the GMM’s to calculate the Log probability of each pixel being in the
+foreground/background.</li>
+      <li>Weight the graph based on this probability map, and resegment.</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="point-distribution">Point Distribution:</h3>
+<ul>
+  <li>First segmentation: 30pts
+    <ul>
+      <li>(EXTRA CREDIT - Internal edge suppression: +20pts)</li>
+    </ul>
+  </li>
+  <li>Texture response map: 15pts</li>
+  <li>2nd segmentation (for single images) using color features: 35pts</li>
+  <li>2nd segmentation (for single images) combining color AND texture features: 10pts</li>
+  <li>2nd segmentation (for <em>sequences</em>) using optical flow AND color+texture: 10pts</li>
+  <li>(EXTRA CREDIT - custom images/sequences: +5pts)</li>
+</ul>
+
+<h2 id="project-files">Project Files</h2>
+
+<p>Please download the starter code
+<a href="https://drive.google.com/open?id=1u5MUK4Ns25o-2P3DZV-7TLVIuNNtfqlW">here</a>.</p>
+
+<p>Files to modify:</p>
+
+<ul>
+  <li>segment.m – main function, implementing segmentation</li>
+  <li>computeUnaryWeights.m – compute unary weights from flow/texture/color features.</li>
+  <li>getTextureResponses.m – generate an image’s texture response map.</li>
+  <li>segment_demo#.m – examples of using segment.m for segmenting single images and image sequences.</li>
+</ul>
+
+<p>Utilities – modify at your peril:</p>
+
+<ul>
+  <li>imRegionHighlight.m, subplot_tight.m</li>
+  <li>img_utils/* – helpful scripts for processing new videos/images, so they work with your code. Specifically: splits videos into individual frames, and then computes a gpb edge probability map for each frame.</li>
+</ul>
+
+<p>Included libraries:</p>
+
+<ul>
+  <li>maxflow.zip - contains a library for max-flow/min-cut, and matlab bindings for it.
+    <ul>
+      <li>(<a href="http://mouse.cs.uwaterloo.ca/code/maxflow-v3.01.zip">Library source</a>, <a href="https://www.mathworks.com/matlabcentral/fileexchange/21310-maxflow">bindings
+source</a>.)</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="making-your-own-input-images">Making your own input images</h4>
+<p>If you’d like to try your code on other images/videos, you’ll need to generate edge probability
+maps for them.  Use <a href="http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/BSR/BSR_code.tgz">Berkeley’s gPb library</a> to do so.  See <code class="highlighter-rouge">custom_img_utils/get_gpb_edges2.m</code> for an example of how to do this.  Additionally, you can use <code class="highlighter-rouge">custom_img_utils/get_video_frames.m</code> to extract the frames from a video.</p>
+
+<h4 id="functions-allowed">Functions Allowed</h4>
+
+<p>For calculating the texture response map:  you must generate the filters manually.  So, you <strong>cannot</strong> use <code class="highlighter-rouge">fspecial</code> or similar.  You may find <code class="highlighter-rouge">imrotate</code> useful for making different orientations of filter.  Of course, <code class="highlighter-rouge">conv2</code> and <code class="highlighter-rouge">imfilter</code> are allowed.</p>
+
+<p>For this project, you <strong>are</strong> allowed to use matlab’s <code class="highlighter-rouge">fitgmdist</code> for your GMM’s.  You may find
+functions like <code class="highlighter-rouge">mvnpdf</code> useful as well.</p>
+
+<p>You are encouraged to use Matlab’s built-in optical flow functionality.  See
+<code class="highlighter-rouge">custom_img_utils/get_video_frames.m</code> for an example.</p>
+
+<p><a name="sub"></a></p>
+<h2 id="submission-guidelines">Submission Guidelines</h2>
+<p><b> We will deduct points if your submission does not comply with the following guidelines.</b></p>
+
+<p>Please submit the project <b> once </b> for your group – there’s no need for each member to submit it.</p>
+
+<h3 id="file-tree-and-naming">File tree and naming</h3>
+
+<p>Your submission on Canvas must be a zip file, following the naming convention <strong>YourDirectoryID_proj3.zip</strong>.  For example, xyz123_proj3.zip.  The file <strong>must keep the same directory structure as the starter code.</strong>  Include your report, <strong>report.pdf</strong>, in the same directory as your code.  Include any custom images in the Images/ folder.  Include a result video <code class="highlighter-rouge">Results/sequence#.avi</code> for each of the sequences (use Matlab’s VideoWriter for this).</p>
+
+<h3 id="report">Report</h3>
+<p><strong>You will be graded primarily based on your report.</strong>  We want you to demonstrate an understanding of the concepts involved in the project, and to show the output produced by your code.</p>
+
+<p>Logistics and bookkeeping you <strong>must</strong> include at the top of your report (-5 points for each one that’s missing):</p>
+<ul>
+  <li>The name of each group member.</li>
+  <li>A brief (one paragraph or less) description of what each group member contributed to the project.</li>
+</ul>
+
+<p>Your report should:</p>
+
+<ul>
+  <li>Explain briefly what you did at each step.  Assume that we’re familiar with the project: don’t repeat what’s already in the course notes.  Instead, focus on any interesting problems you encountered and/or solutions you implemented.</li>
+  <li>Compare the initial edge-based segmentation to the second to the second, texture/color/flow-based segmentation.  Include images of both steps, for at least one of single images, and at least two frames from one of the sequences.
+    <ul>
+      <li>(If you did the extra credit, internal-edge suppression, include visualizations of the results of this, too.)</li>
+    </ul>
+  </li>
+  <li>Include final results for all of the single images (from the training set and test set).
+    <ul>
+      <li>For each, include results testing using color and texture separately, and also using a weighted combination of both.</li>
+    </ul>
+  </li>
+  <li>Include final results for all sequences (training and test sets):
+    <ul>
+      <li>For each sequence, include a sub-sequence of four frames in your report with detailed results:  testing using color, texture, and flow separately, and then using a weighted combination of all three.</li>
+      <li>Additionally, use Matlab’s videowriter to create videos of your results for the full sequences: Results/sequence1.avi and Results/sequence2.avi</li>
+    </ul>
+  </li>
+</ul>
+
+<p>As usual, your report must be full English sentences, <strong>not</strong> commented code. There is a word limit of 1500 words.</p>
+
+<p><a name="coll"></a></p>
+<h2 id="collaboration-policy">Collaboration Policy</h2>
+<p>We encourage you to work closely with your groupmates, including collaborating on writing code.  With students outside your group, you may discuss methods and ideas but may not share code.</p>
+
+<p>For the full collaboration policy, including guidelines on citations and limitations on using online resources, see <a href="https://cmsc426spring2019.github.io/index.html">the course website</a>.</p>
+
+
+  </article>
+
+</div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <div class="footer-col-1 column">
+      <ul>
+        
+        
+        
+        <li>
+          <a href="mailto:"></a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+        
+    </div>
+
+    <div class="footer-col-3 column">
+      
+    </div>
+
+  </div>
+
+</footer>
+
+
+    <!-- mathjax -->
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </body>
+</html>
