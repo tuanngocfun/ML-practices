@@ -1,0 +1,49 @@
+{"time":"2024-11-22T09:54:59.315236049Z","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2024-11-22T09:54:59.315283742Z","level":"INFO","msg":"created symlink","path":"/content/wandb/run-20241122_095459-ma62gp21/logs/debug-core.log"}
+{"time":"2024-11-22T09:54:59.423355032Z","level":"INFO","msg":"created new stream","id":"ma62gp21"}
+{"time":"2024-11-22T09:54:59.423397338Z","level":"INFO","msg":"stream: started","id":"ma62gp21"}
+{"time":"2024-11-22T09:54:59.423413223Z","level":"INFO","msg":"writer: Do: started","stream_id":"ma62gp21"}
+{"time":"2024-11-22T09:54:59.423593971Z","level":"INFO","msg":"handler: started","stream_id":"ma62gp21"}
+{"time":"2024-11-22T09:54:59.423615959Z","level":"INFO","msg":"sender: started","stream_id":"ma62gp21"}
+{"time":"2024-11-22T09:55:04.714102823Z","level":"INFO","msg":"Starting system monitor"}
+{"time":"2024-11-22T09:55:05.517551439Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T09:55:05.517578252Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:07:13.855743385Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:07:13.866205036Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:07:14.168815317Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:16:48.696406948Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:16:48.762664041Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:16:53.973907502Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:16:54.002784325Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:16:55.216902551Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:16:55.511463768Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:18:15.5194443Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:18:15.635555406Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:18:38.813294637Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:18:39.022061119Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:21:17.925017474Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:21:18.028810328Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:21:26.245311094Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:21:52.572924307Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:24:04.06503288Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:24:04.875379204Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:27:07.578145062Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:27:07.684259816Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:30:02.64494714Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:30:02.649585901Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:30:02.657327722Z","level":"ERROR","msg":"runconsolelogs: failed to write to file: failed to open file: open /content/wandb/run-20241122_095459-ma62gp21/files/output.log: no such file or directory"}
+{"time":"2024-11-22T10:33:13.634165956Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:33:14.446154772Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:34:31.081771048Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:34:31.186544572Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:35:12.243798719Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:35:12.348663019Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:35:42.67151088Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:35:42.77676471Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:35:55.569637236Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:35:55.674096802Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:36:09.962851029Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:36:10.068108159Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:38:05.637232386Z","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-11-22T10:38:05.740331269Z","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-11-22T10:38:07.979877078Z","level":"INFO","msg":"Resuming system monitor"}

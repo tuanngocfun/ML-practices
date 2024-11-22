@@ -1,0 +1,50 @@
+INFO:pytorch_lightning.utilities.rank_zero:GPU available: True (cuda), used: True
+INFO:pytorch_lightning.utilities.rank_zero:TPU available: False, using: 0 TPU cores
+INFO:pytorch_lightning.utilities.rank_zero:HPU available: False, using: 0 HPUs
+/usr/local/lib/python3.10/dist-packages/pytorch_lightning/loggers/wandb.py:396: There is a wandb run already in progress and newly created instances of `WandbLogger` will reuse this run. If this is not desired, call `wandb.finish()` before instantiating `WandbLogger`.
+INFO:pytorch_lightning.accelerators.cuda:LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+INFO:pytorch_lightning.callbacks.model_summary:
+  | Name  | Type | Params | Mode
+---------------------------------------
+0 | model | UNet | 974 K  | train
+---------------------------------------
+974 K     Trainable params
+0         Non-trainable params
+974 K     Total params
+3.898     Total estimated model params size (MB)
+33        Modules in train mode
+0         Modules in eval mode
+INFO:pytorch_lightning.utilities.rank_zero:`Trainer.fit` stopped: `max_epochs=20` reached.
+[33mhint: Using 'master' as the name for the initial branch. This default branch name[m
+[33mhint: is subject to change. To configure the initial branch name to use in all[m
+[33mhint: of your new repositories, which will suppress this warning, call:[m
+[33mhint: [m
+[33mhint: 	git config --global init.defaultBranch <name>[m
+[33mhint: [m
+[33mhint: Names commonly chosen instead of 'master' are 'main', 'trunk' and[m
+[33mhint: 'development'. The just-created branch can be renamed via this command:[m
+[33mhint: [m
+[33mhint: 	git branch -m <name>[m
+Initialized empty Git repository in /content/.git/
+remote: Enumerating objects: 2836, done.[K
+remote: Counting objects: 100% (164/164), done.[K
+remote: Compressing objects: 100% (117/117), done.[K
+remote: Total 2836 (delta 36), reused 149 (delta 34), pack-reused 2672 (from 1)[K
+Receiving objects: 100% (2836/2836), 384.12 MiB | 15.81 MiB/s, done.
+Resolving deltas: 100% (314/314), done.
+From https://github.com/tuanngocfun/ML-practices
+ * [new branch]      3dcv-exercises          -> origin/3dcv-exercises
+ * [new branch]      auto-label-lstm         -> origin/auto-label-lstm
+ * [new branch]      base-lec                -> origin/base-lec
+ * [new branch]      dependabot/pip/notebooks/single_view_mpi/tensorflow-2.11.1 -> origin/dependabot/pip/notebooks/single_view_mpi/tensorflow-2.11.1
+ * [new branch]      main                    -> origin/main
+ * [new branch]      merchants-rating-system -> origin/merchants-rating-system
+ * [new branch]      multi-models-pipeline   -> origin/multi-models-pipeline
+ * [new branch]      reconstruct-3d-to-2d    -> origin/reconstruct-3d-to-2d
+ * [new branch]      renovate/configure      -> origin/renovate/configure
+You asked to pull from the remote 'origin', but did not specify
+a branch. Because this is not the default configured remote
+for your current branch, you must specify a branch on the command line.
+Branch 'main' set up to track remote branch 'main' from 'origin'.
+Switched to a new branch 'main'
+Moved lightning_logs to results
