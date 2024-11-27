@@ -1,0 +1,47 @@
+(trietenv) students@hoangchau-Z790-UD:~/PyTorch-GAN/implementations/cyclegan$ python cyclegan.py --batch_size 8 --checkpoint_interval 10
+Namespace(epoch=0, n_epochs=200, dataset_name='monet2photo', batch_size=8, lr=0.0002, b1=0.5, b2=0.999, decay_epoch=100, n_cpu=8, img_height=256, img_width=256, channels=3, sample_interval=100, checkpoint_interval=10, n_residual_blocks=9, lambda_cyc=10.0, lambda_id=5.0)
+wandb: Currently logged in as: tuanngoc (nlp-vn). Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.18.7 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.4
+wandb: Run data is saved locally in /home/students/PyTorch-GAN/implementations/cyclegan/wandb/run-20241124_003147-5x1viinm
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run monet2photo_run
+wandb: ⭐️ View project at https://wandb.ai/nlp-vn/cyclegan
+wandb: 🚀 View run at https://wandb.ai/nlp-vn/cyclegan/runs/5x1viinm
+/home/students/PyTorch-GAN/implementations/cyclegan/cyclegan.py:188: UserWarning: The torch.cuda.*DtypeTensor constructors are no longer recommended. It's best to use methods such as torch.tensor(data, dtype=*, device='cuda') to create tensors. (Triggered internally at /opt/conda/conda-bld/pytorch_1711403378171/work/torch/csrc/tensor/python_tensor.cpp:83.)
+  valid = Variable(Tensor(np.ones((real_A.size(0), *D_A.output_shape))), requires_grad=False)
+[Epoch 99/200] [Batch 216/786] [D loss: 0.220929] [G loss: 1.479946, adv: 0.429845, cycle: 0.075037, identity: 0.059946] ETA: 11:12:47.167068wandb: ERROR Error while calling W&B API: context deadline exceeded (<Response [500]>)
+[Epoch 99/200] [Batch 229/786] [D loss: 0.220810] [G loss: 1.423409, adv: 0.380966, cycle: 0.075167, identity: 0.058154] ETA: 11:11:38.127277wandb: ERROR Error while calling W&B API: context deadline exceeded (<Response [500]>)
+[Epoch 199/200] [Batch 785/786] [D loss: 0.083596] [G loss: 1.471331, adv: 0.703841, cycle: 0.057322, identity: 0.038854] ETA: 0:00:00.470855wandb: - 5916.760 MB of 5916.760 wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:             Batch ▅▂▄▅▇▁▃▄▆▇▂▃▅▆▃▅▆█▂▄▅▇▁▃▄▆▇▄▆▇▂▃▅▆█▂▄▅▇▁
+wandb:        Cycle Loss █▆▄▄▅▄▄▅▂▃▃▃▂▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▂▁▁▁▁▁▁▁▁▁
+wandb:            D Loss ▇▃▅▆▄▇▅█▅▃▃▅▄▅▃▅▃▅▃▂▅▁▂▃▂▂▃▁▃▂▂▂▃▂▃▃▁▁▂▂
+wandb:             Epoch ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:            G Loss █▆▄▃▅▃▄▄▂▂▃▂▂▂▂▁▂▂▂▂▁▂▂▁▂▂▁▂▂▁▂▁▁▂▁▁▁▁▁▁
+wandb:          GAN Loss █▇▃▃▄▁▂▁▃▂▅▂▄▄▃▂▂▄▂▃▁▅▃▃▆▅▃▆▄▅▅▅▅▆▅▅▄▆▆▆
+wandb:     Identity Loss █▅▅▄▅▄▅▄▃▃▄▃▂▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▂▁▁▁▁▁▁
+wandb: Learning Rate D_A █████████████████████▇▇▇▆▆▆▅▅▅▄▄▄▃▃▃▂▂▁▁
+wandb: Learning Rate D_B █████████████████████▇▇▇▆▆▆▅▅▅▄▄▄▃▃▃▂▂▁▁
+wandb:   Learning Rate G █████████████████████▇▇▇▆▆▆▅▅▅▄▄▄▃▃▃▂▂▁▁
+wandb: 
+wandb: Run summary:
+wandb:             Batch 785
+wandb:        Cycle Loss 0.05732
+wandb:            D Loss 0.0836
+wandb:             Epoch 199
+wandb:            G Loss 1.47133
+wandb:          GAN Loss 0.70384
+wandb:     Identity Loss 0.03885
+wandb: Learning Rate D_A 0.0
+wandb: Learning Rate D_B 0.0
+wandb:   Learning Rate G 0.0
+wandb: 
+wandb: 🚀 View run monet2photo_run at: https://wandb.ai/nlp-vn/cyclegan/runs/5x1viinm
+wandb: ⭐️ View project at: https://wandb.ai/nlp-vn/cyclegan
+wandb: Synced 6 W&B file(s), 1572 media file(s), 2 artifact file(s) and 80 other file(s)
+wandb: Find logs at: ./wandb/run-20241124_003147-5x1viinm/logs
+wandb: WARNING The new W&B backend becomes opt-out in version 0.18.0; try it out with `wandb.require("core")`! See https://wandb.me/wandb-core for more information.
+(trietenv) students@hoangchau-Z790-UD:~/PyTorch-GAN/implementations/cyclegan$
