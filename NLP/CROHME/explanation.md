@@ -11,29 +11,41 @@ The algorithm uses trigonometric calculations and interval arithmetic to determi
 
 ### **2.1 Center of a Stroke**
 The center of a stroke is calculated as the midpoint of its bounding box:
-\[
-\text{Center}(S) = \left( \frac{x_{\text{min}} + x_{\text{max}}}{2}, \frac{y_{\text{min}} + y_{\text{max}}}{2} \right)
-\]
+
+Center(S) = [(x_min + x_max) / 2, (y_min + y_max) / 2]
+
+Where:
+- x_min and x_max are the minimum and maximum x-coordinates of the stroke points.
+- y_min and y_max are the minimum and maximum y-coordinates of the stroke points.
 
 ### **2.2 Angular Range**
-For each stroke \(j\), the angular range it subtends from the center \(sc\) of stroke \(i\) is defined by:
+For each stroke \( j \), the angular range it subtends from the center \( sc \) of stroke \( i \) is defined as:
+
 \[
 \theta = \cos^{-1} \left( \frac{\mathbf{w} \cdot \mathbf{h}}{\| \mathbf{w} \| \| \mathbf{h} \|} \right)
 \]
-where:
-- \(\mathbf{w}\) is the vector from \(sc\) to a point on stroke \(j\).
-- \(\mathbf{h}\) is the horizontal reference vector \([1, 0]\).
-- Adjust \(\theta\) based on the position of \(\mathbf{w}\):
-  \[\text{If } w_y < 0, \theta = 2\pi - \theta.\]
 
-The range for stroke \(j\) is \([\theta_{\text{min}}, \theta_{\text{max}}]\).
+Where:
+- \( \mathbf{w} \) is the vector from \( sc \) to a point on stroke \( j \).
+- \( \mathbf{h} \) is the horizontal reference vector [1, 0].
+
+Adjust \( \theta \) based on the position of \( \mathbf{w} \):
+- If \( w_y < 0 \), then \( \theta = 2\pi - \theta \).
+
+The range for stroke \( j \) is given as:
+
+\[
+[\theta_{\text{min}}, \theta_{\text{max}}]
+\]
 
 ### **2.3 Visibility**
-Visibility is determined by checking the intersection of the angular range \(U\) with \([\theta_{\text{min}}, \theta_{\text{max}}]\):
+Visibility is determined by checking the intersection of the angular range \( U \) with \( [\theta_{\text{min}}, \theta_{\text{max}}] \):
+
 \[
-V = U \cap [\theta_{\text{min}}, \theta_{\text{max}}].
+V = U \cap [\theta_{\text{min}}, \theta_{\text{max}}]
 \]
-If \(V\) is non-empty, the strokes are visible to each other, and an edge is added.
+
+If \( V \) is non-empty, the strokes are visible to each other, and an edge is added.
 
 ---
 
@@ -180,4 +192,3 @@ def distance(s, center):
 ---
 
 This detailed breakdown ensures a clear understanding of the algorithm's mathematical foundation, its logical flow via pseudocode, and the precise role of each part of the implementation.
-
