@@ -12,7 +12,7 @@ The algorithm uses trigonometric calculations and interval arithmetic to determi
 ### **2.1 Center of a Stroke**
 The center of a stroke is calculated as the midpoint of its bounding box:
 
-Center(S) = [(x_min + x_max) / 2, (y_min + y_max) / 2]
+Center(S) = [(x_{min} + x_{max}) / 2, (y_{min} + y_{max}) / 2]
 
 Where:
 - x_min and x_max are the minimum and maximum x-coordinates of the stroke points.
