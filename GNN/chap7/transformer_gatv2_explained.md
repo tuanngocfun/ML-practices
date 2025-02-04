@@ -8,9 +8,9 @@ After computing attention scores for multiple heads, we can aggregate them using
 1. **Averaging (Mean Pooling):**
    - The embeddings from different attention heads are summed and normalized by the number of heads.
    - Formula:
-     ```math
-     h_i = \frac{1}{n} \sum_{k=1}^{n} h_i^k = \frac{1}{n} \sum_{k=1}^{n} \sum_{j \in N_i} \alpha_{ij}^k W^k x_j
-     ```
+```math
+h_i = \frac{1}{n} \sum_{k=1}^{n} h_i^k = \frac{1}{n} \sum_{k=1}^{n} \sum_{j \in N_i} \alpha_{ij}^k W^k x_j
+```
      where:
      - $h_i$ is the final aggregated embedding for token $i$.
      - $n$ is the number of attention heads.
@@ -22,9 +22,9 @@ After computing attention scores for multiple heads, we can aggregate them using
 2. **Concatenation:**
    - Instead of averaging, embeddings are concatenated to form a larger vector.
    - Formula:
-     ```math
-     h_i = \|_{k=1}^{n} h_i^k = \|_{k=1}^{n} \sum_{j \in N_i} \alpha_{ij}^k W^k x_j
-     ```
+```math
+h_i = \|_{k=1}^{n} h_i^k = \|_{k=1}^{n} \sum_{j \in N_i} \alpha_{ij}^k W^k x_j
+```
      where:
      - The notation $\|_{k=1}^{n}$ indicates concatenation across all heads.
    - Used in **hidden layers** to retain more information.
@@ -74,9 +74,9 @@ Since neural networks rely on matrix multiplications, we need to implement GAT/G
 
 ### **Mathematical Representation**
 1. **Graph Attention Layer formula:**
-   ```math
-   h_i = \sum_{j \in N_i} \alpha_{ij} W x_j
-   ```
+```math
+h_i = \sum_{j \in N_i} \alpha_{ij} W x_j
+```
    where:
    - $h_i$ is the updated node representation.
    - $\alpha_{ij}$ is the attention coefficient between nodes $i$ and $j$.
@@ -84,9 +84,9 @@ Since neural networks rely on matrix multiplications, we need to implement GAT/G
    - $x_j$ is the embedding of node $j$.
 
 2. **Matrix Formulation:**
-   ```math
-   H = \tilde{A} W_{\alpha} X W^T
-   ```
+```math
+H = \tilde{A} W_{\alpha} X W^T
+```
    where:
    - $H$ is the matrix of updated node representations.
    - $\tilde{A}$ is the normalized adjacency matrix of the graph.
