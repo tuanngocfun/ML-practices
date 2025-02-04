@@ -1,105 +1,141 @@
-## Multi-head Attention
+# **Detailed Analysis of Graph Embedding Methods**
 
-Multi-head attention is a technique introduced by Vaswani et al. (2017) in the original Transformer paper. Instead of computing a single attention score, it calculates multiple embeddings with their own attention scores. This enhances the model's ability to capture diverse features from input data.
+## 1. Local Heuristics
+Local heuristics use neighborhood information of nodes to measure their similarity in the graph.
 
-### **Combining Multi-Head Attention Results**
-After computing attention scores for multiple heads, we can aggregate them using two methods:
-
-1. **Averaging (Mean Pooling):**
-   - The embeddings from different attention heads are summed and normalized by the number of heads.
-   - Formula:
+### **a. Common Neighbors**
 ```math
-h_i = \frac{1}{n} \sum_{k=1}^{n} h_i^k = \frac{1}{n} \sum_{k=1}^{n} \sum_{j \in N_i} \alpha_{ij}^k W^k x_j
+f(u, v) = |\mathcal{N}(u) \cap \mathcal{N}(v)|
 ```
-     where:
-     - $h_i$ is the final aggregated embedding for token $i$.
-     - $n$ is the number of attention heads.
-     - $\alpha_{ij}^k$ represents the attention coefficient for head $k$ between tokens $i$ and $j$.
-     - $W^k$ is the learned weight matrix for head $k$.
-     - $x_j$ is the embedding of token $j$.
-   - Used in the **final layer** of the network.
+**Notation:**
+- $u, v$ – Two nodes in the graph.
+- $\mathcal{N}(u)$ – Set of neighbors of $u$.
+- $\mathcal{N}(v)$ – Set of neighbors of $v$.
+- $\mathcal{N}(u) \cap \mathcal{N}(v)$ – Intersection of the two neighbor sets.
+- $| \cdot |$ – Cardinality of the set.
 
-2. **Concatenation:**
-   - Instead of averaging, embeddings are concatenated to form a larger vector.
-   - Formula:
+### **b. Jaccard’s Coefficient**
 ```math
-h_i = \|_{k=1}^{n} h_i^k = \|_{k=1}^{n} \sum_{j \in N_i} \alpha_{ij}^k W^k x_j
+f(u, v) = \frac{|\mathcal{N}(u) \cap \mathcal{N}(v)|}{|\mathcal{N}(u) \cup \mathcal{N}(v)|}
 ```
-     where:
-     - The notation $\|_{k=1}^{n}$ indicates concatenation across all heads.
-   - Used in **hidden layers** to retain more information.
+**Notation:**
+- Same as Common Neighbors.
+- $\mathcal{N}(u) \cup \mathcal{N}(v)$ – Union of the two neighbor sets.
 
-#### **Practical Usage**
-- **Concatenation** is preferred in hidden layers.
-- **Averaging** is used in the final layer to summarize attention information.
+### **c. Adamic-Adar Index**
+```math
+f(u, v) = \sum_{x \in \mathcal{N}(u) \cap \mathcal{N}(v)} \frac{1}{\log |\mathcal{N}(x)|}
+```
+**Notation:**
+- $x$ – A common neighbor of $u$ and $v$.
+- $|\mathcal{N}(x)|$ – Number of neighbors of node $x$.
+- $\log |\mathcal{N}(x)|$ – Logarithm of the number of neighbors of $x$.
+- $\frac{1}{\log |\mathcal{N}(x)|}$ – Inverse logarithm value.
 
 ---
 
-## Improved Graph Attention Layer (GATv2)
-
-Brody et al. (2021) improved the standard **Graph Attention Layer (GAT)** by introducing **GATv2**, which computes a more expressive **dynamic attention**.
-
-### **Comparison between GAT and GATv2**
-
-#### **Original Graph Attention Operator (GAT)**
+## 2. Matrix Factorization
+### **a. Representation via Inner Product of Embeddings**
 ```math
-\alpha_{ij} = \frac{\exp \left( W_{att}^{t} \text{LeakyReLU}(W[x_i || x_j]) \right)}{\sum_{k \in N_i} \exp \left( W_{att}^{t} \text{LeakyReLU}(W[x_i || x_k]) \right)}
+A_{uv} \approx z_v^T z_u
 ```
-where:
-- $\alpha_{ij}$ is the attention coefficient between nodes $i$ and $j$.
-- $W_{att}^{t}$ is the attention weight matrix at time step $t$.
-- $W$ is the learned weight matrix applied to node embeddings.
-- $x_i$ and $x_j$ are the embeddings of nodes $i$ and $j$.
-- $||$ represents concatenation.
-- $N_i$ is the neighborhood of node $i$.
+**Notation:**
+- $A_{uv}$ – Entry of the adjacency matrix $A$ at row $u$, column $v$.
+- $z_u, z_v$ – Embedding vectors of nodes $u$ and $v$.
+- $z_v^T z_u$ – Inner product of the two embedding vectors.
 
-#### **Modified Operator (GATv2)**
+### **b. Loss Function**
 ```math
-\alpha_{ij} = \frac{\exp \left( W_{att}^{t} \text{LeakyReLU}(W[x_i || x_j]) \right)}{\sum_{k \in N_i} \exp \left( W_{att}^{t} \text{LeakyReLU}(W[x_i || x_k]) \right)}
+\min_{Z} \sum_{i \in V, j \in V} (A_{ij} - z_j^T z_i)^2
 ```
-where:
-- The key change is applying the weight matrix $W$ **after** the attention weight computation, making the model more expressive.
-
-#### **Why Prefer GATv2?**
-- **More dynamic and expressive** attention mechanism.
-- **Outperforms GAT** consistently in experimental benchmarks.
-
-Thus, **GATv2 should be used whenever possible.**
+**Notation:**
+- $V$ – Set of nodes in the graph.
+- $Z$ – Embedding matrix of nodes.
+- $A_{ij}$ – Entry in the adjacency matrix.
+- $(A_{ij} - z_j^T z_i)^2$ – Squared error term.
 
 ---
 
-## Implementing Graph Attention Layer in NumPy
+## 3. Graph Autoencoder (GAE)
+GAE is an unsupervised model used to learn embeddings of nodes by compressing graph information into a latent space and reconstructing the adjacency matrix.
 
-Since neural networks rely on matrix multiplications, we need to implement GAT/GATv2 using matrix operations.
-
-### **Mathematical Representation**
-1. **Graph Attention Layer formula:**
+### **a. Encoder**
 ```math
-h_i = \sum_{j \in N_i} \alpha_{ij} W x_j
+Z = GCN(X, A)
 ```
-   where:
-   - $h_i$ is the updated node representation.
-   - $\alpha_{ij}$ is the attention coefficient between nodes $i$ and $j$.
-   - $W$ is the learned weight matrix.
-   - $x_j$ is the embedding of node $j$.
+**Notation:**
+- $Z$ – Embedding matrix of nodes after encoding.
+- $GCN(\cdot)$ – Graph Convolutional Network, a neural network model for feature extraction on graphs.
+- $X$ – Feature matrix of nodes.
+- $A$ – Adjacency matrix of the graph.
 
-2. **Matrix Formulation:**
+### **b. Decoder**
 ```math
-H = \tilde{A} W_{\alpha} X W^T
+\hat{A} = \sigma(Z^T Z)
 ```
-   where:
-   - $H$ is the matrix of updated node representations.
-   - $\tilde{A}$ is the normalized adjacency matrix of the graph.
-   - $W_{\alpha}$ is the matrix storing all $\alpha_{ij}$ attention coefficients.
-   - $X$ is the matrix of input node embeddings.
-   - $W$ is the learned weight matrix.
+**Notation:**
+- $\hat{A}$ – Reconstructed adjacency matrix.
+- $Z^T Z$ – Inner product of the embeddings.
+- $\sigma(\cdot)$ – Sigmoid activation function.
 
-By implementing these formulas efficiently, we can speed up multi-head attention computations.
+### **c. Loss Function**
+```math
+\mathcal{L}_{BCE} = \sum_{i \in V, j \in V} -A_{ij} \log(\hat{A}_{ij}) - (1 - A_{ij}) \log(1 - \hat{A}_{ij})
+```
+**Notation:**
+- $\mathcal{L}_{BCE}$ – Binary Cross-Entropy loss.
+- $A_{ij}$ – True adjacency matrix value.
+- $\hat{A}_{ij}$ – Predicted adjacency matrix value.
 
 ---
 
-## **Summary**
-- **Multi-head attention** helps capture diverse relationships between input features.
-- **Two aggregation methods:** Averaging for the final layer, concatenation for hidden layers.
-- **GATv2 improves over GAT** by changing the order of weight applications, leading to better expressivity.
-- **Matrix multiplication is key** for efficient GAT/GATv2 implementations.
+## 4. Variational Graph Autoencoder (VGAE)
+VGAE is an improved version of GAE, where embeddings are learned as probabilistic distributions rather than fixed vectors.
+
+### **a. Encoder (Embedding Distribution Representation)**
+```math
+\mathcal{N}(\mu_i, \sigma_i^2)
+```
+**Notation:**
+- $\mathcal{N}(\mu_i, \sigma_i^2)$ – Gaussian distribution with mean $\mu_i$ and variance $\sigma_i^2$.
+- $\mu_i$ – Mean of node embedding.
+- $\sigma_i^2$ – Variance of node embedding.
+
+### **b. Loss Function**
+```math
+\mathcal{L}_{ELBO} = \mathcal{L}_{BCE} - KL[q(Z|X, A) \parallel p(Z)]
+```
+**Notation:**
+- $\mathcal{L}_{ELBO}$ – Evidence Lower Bound (ELBO), an optimization criterion for variational inference.
+- $KL[q(Z|X, A) \parallel p(Z)]$ – Kullback–Leibler divergence, measuring the difference between the learned distribution $q(Z|X, A)$ and the prior distribution $p(Z)$.
+
+---
+
+## **5. Double-Radius Node Labeling (DRNL) and Deep Graph Convolutional Neural Network (DGCNN)**
+Another approach to graph embedding is **Double-Radius Node Labeling (DRNL)**, used in models such as SEAL. DRNL assigns unique labels to nodes based on their distances to a pair of target nodes, allowing a GNN to learn effective representations for link prediction.
+
+### **a. DRNL Function**
+```math
+f(i) = 1 + \min(d(i, x), d(i, y)) + \frac{d}{2} \left(\frac{d}{2} + (d\%2) - 1\right)
+```
+where $d = d(i, x) + d(i, y)$.
+
+### **b. Integration with DGCNN**
+- DRNL-labeled nodes are encoded using **one-hot encoding**.
+- A **Deep Graph Convolutional Neural Network (DGCNN)** is then trained to predict links based on node labels and structural information.
+- **Global Sort Pooling** ensures embeddings remain consistent across graph structures.
+- The model is trained using **binary cross-entropy loss**.
+
+This method complements the embedding-based techniques by leveraging structured node labeling to improve link prediction in graphs.
+
+---
+
+## **Comparison of GAE and VGAE**
+
+| Model | Encoder | Decoder | Loss Function |
+|-------|--------|---------|--------------|
+| **GAE** | $Z = GCN(X, A)$ | $\hat{A} = \sigma(Z^T Z)$ | $\mathcal{L}_{BCE}$ |
+| **VGAE** | $\mathcal{N}(\mu_i, \sigma_i^2)$ | $\hat{A} = \sigma(Z^T Z)$ | $\mathcal{L}_{ELBO}$ |
+
+This document provides an in-depth mathematical and conceptual analysis of graph embedding methods, explaining key concepts and their associated formulas with detailed notation breakdowns.
+
