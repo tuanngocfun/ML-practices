@@ -18,9 +18,46 @@ This document compares three different approaches for learning from heterogeneou
 | **Layer Normalization** | ❌ | ❌ | ✅ **(Added LayerNorm for stability)** |
 | **Residual Connections** | ❌ | ❌ | ✅ **(Better feature propagation)** |
 
+```python
+# Example from Improved Version B
+class EnhancedHAN(nn.Module):
+    def __init__(self, dim_in, dim_out, dim_h=192, heads=12, num_layers=2):
+        super().__init__()
+        self.hans = nn.ModuleList([
+            HANConv(
+                in_channels=-1 if i == 0 else dim_h,
+                out_channels=dim_h,
+                heads=heads,
+                dropout=0.5,
+                metadata=data.metadata()
+            ) for i in range(num_layers)
+        ])
+        self.classifier = nn.Sequential(
+            Linear(dim_h, dim_h),
+            nn.GELU(),
+            LayerNorm(dim_h),
+            Dropout(0.5),
+            Linear(dim_h, dim_h // 2),
+            nn.GELU(),
+            LayerNorm(dim_h // 2),
+            Dropout(0.5),
+            Linear(dim_h // 2, dim_out)
+        )
+```
+
 ---
 
 ## 3. Training Strategy
+
+```python
+# Example Learning Rate Scheduling in Version B
+scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
+    optimizer,
+    T_0=20,
+    T_mult=2,
+    eta_min=1e-6
+)
+```
 
 | **Aspect**             | **Original Approach** | **Improved Version A** | **Improved Version B** |
 |------------------------|----------------------|----------------------|----------------------|
@@ -42,6 +79,11 @@ This document compares three different approaches for learning from heterogeneou
 | **L2 Regularization on Attention** | ❌ | ❌ | ✅ **(Regularization on HAN's attention weights)** |
 | **Optimizer** | `Adam` | `Adam` | **`AdamW` (Better weight decay handling)** |
 
+```python
+# Example Gradient Clipping in Version B
+torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=0.5)
+```
+
 ---
 
 ## 5. Performance Improvements
@@ -51,6 +93,30 @@ This document compares three different approaches for learning from heterogeneou
 | **Best Train Accuracy** | `99.50%` | `99.25%` | **`99.92%`** |
 | **Best Validation Accuracy** | `78.75%` | `78.50%` | **`88.90%`** |
 | **Final Test Accuracy** | **`81.58%`** | **`82.01%`** | **`85.94%`** |
+
+```python
+# Early Stopping Implementation in Version B
+best_val_acc = 0
+patience = 15
+patience_counter = 0
+for epoch in range(200):
+    model.train()
+    optimizer.zero_grad()
+    out = model(data.x_dict, data.edge_index_dict)
+    loss = F.cross_entropy(out[data['author'].train_mask], data['author'].y[data['author'].train_mask])
+    loss.backward()
+    optimizer.step()
+    scheduler.step()
+    if epoch % 20 == 0:
+        val_acc = test(data['author'].val_mask)
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
+            patience_counter = 0
+        else:
+            patience_counter += 1
+        if patience_counter >= patience:
+            break
+```
 
 ---
 
