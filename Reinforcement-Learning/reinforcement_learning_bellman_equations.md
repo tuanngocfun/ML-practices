@@ -313,43 +313,110 @@ Công thức này rất quan trọng trong các phương pháp lập trình đ�
 
 **Bài tập 3.29:**
 
-### Biểu diễn các phương trình Bellman theo xác suất chuyển trạng thái và hàm phần thưởng
+### Giải bài tập 3.29 - Viết lại các phương trình Bellman
 
-Bốn phương trình Bellman cho các hàm giá trị \$v\_*\$, \$q\_*\$, \$\pi\_\*\$ có thể được viết lại theo hàm xác suất chuyển trạng thái \$p(s', r | s, a)\$ và hàm phần thưởng \$r(s, a)\$:
+Bài tập yêu cầu chúng ta viết lại bốn phương trình Bellman cho các hàm giá trị:
 
-1. **Hàm giá trị trạng thái theo chính sách \$v_\pi(s)\$**:
+1. **Giá trị trạng thái theo chính sách** $v_\pi(s)$
+2. **Giá trị trạng thái tối ưu** $v_*(s)$
+3. **Giá trị hành động theo chính sách** $q_\pi(s, a)$
+4. **Giá trị hành động tối ưu** $q_*(s, a)$
+
+Những phương trình này cần được biểu diễn bằng:
+
+- **Hàm xác suất chuyển tiếp** $p(s',r | s,a)$
+- **Hàm phần thưởng** $r(s,a)$
+
+---
+
+### 1. Phương trình Bellman cho giá trị trạng thái theo chính sách $v_\pi(s)$
+
+Hàm giá trị trạng thái theo chính sách $\pi$ được tính theo kỳ vọng của phần thưởng nhận được khi tác nhân đi theo chính sách đó:
 
 ```math
 v_\pi(s) = \sum_{a \in A(s)} \pi(a | s) \sum_{s', r} p(s', r | s, a) [r + \gamma v_\pi(s')]
 ```
 
-Phương trình này mô tả giá trị kỳ vọng khi tác nhân tuân theo một chính sách \$\pi\$ tại trạng thái \$s\$, xem xét tất cả các hành động và trạng thái kế tiếp.
+Diễn giải:
+- $\pi(a | s)$ là xác suất chọn hành động $a$ tại trạng thái $s$.
+- $p(s', r | s, a)$ là xác suất chuyển từ trạng thái $s$ đến $s'$, nhận phần thưởng $r$.
+- $r + \gamma v_\pi(s')$ là giá trị mong đợi khi thực hiện hành động $a$.
 
-2. **Hàm giá trị hành động theo chính sách \$q_\pi(s, a)\$**:
+---
 
-```math
-q_\pi(s, a) = \sum_{s', r} p(s', r | s, a) [r + \gamma \sum_{a'} \pi(a' | s') q_\pi(s', a')]
-```
+### 2. Phương trình Bellman tối ưu cho giá trị trạng thái $v_*(s)$
 
-Phương trình này mở rộng phương trình Bellman cho các giá trị hành động, bao gồm cả phần thưởng mong đợi và việc lựa chọn hành động tiếp theo theo chính sách hiện tại.
-
-3. **Hàm giá trị trạng thái tối ưu \$v_\*(s)\$**:
+Giá trị tối ưu của trạng thái $s$ là giá trị lớn nhất có thể đạt được bằng cách chọn hành động tối ưu:
 
 ```math
 v_*(s) = \max_{a \in A(s)} \sum_{s', r} p(s', r | s, a) [r + \gamma v_*(s')]
 ```
 
-Phương trình này chỉ ra rằng giá trị trạng thái tối ưu được xác định bằng cách chọn hành động tốt nhất có thể tại mỗi trạng thái.
+Diễn giải:
+- Thay vì sử dụng chính sách $\pi$, ta chọn hành động tối ưu $a^*$.
+- Giá trị tối ưu của trạng thái $s$ được tính dựa trên hành động tốt nhất tại mỗi bước.
 
-4. **Hàm giá trị hành động tối ưu \$q_\*(s, a)\$**:
+---
+
+### 3. Phương trình Bellman cho giá trị hành động theo chính sách $q_\pi(s, a)$
+
+Giá trị của hành động $a$ tại trạng thái $s$ được tính bằng kỳ vọng của phần thưởng và giá trị trạng thái tương lai khi đi theo chính sách $\pi$:
+
+```math
+q_\pi(s, a) = \sum_{s', r} p(s', r | s, a) [r + \gamma \sum_{a'} \pi(a' | s') q_\pi(s', a')]
+```
+
+Diễn giải:
+- $q_\pi(s, a)$ tính giá trị của hành động $a$ tại trạng thái $s$.
+- Không cần cộng dồn qua tất cả các hành động tại $s$ vì ta đang xét một hành động cụ thể $a$.
+
+---
+
+### 4. Phương trình Bellman tối ưu cho giá trị hành động $q_*(s, a)$
+
+Phương trình Bellman tối ưu cho giá trị hành động tương tự như $q_\pi(s, a)$, nhưng thay vì dùng $v_\pi(s')$, ta sử dụng giá trị tối ưu $v_*(s')$:
 
 ```math
 q_*(s, a) = \sum_{s', r} p(s', r | s, a) [r + \gamma \max_{a'} q_*(s', a')]
 ```
 
-Phương trình này mô tả rằng giá trị tối ưu của một hành động tại trạng thái \$s\$ được xác định bằng cách tổng hợp tất cả các trạng thái kế tiếp có thể xảy ra và chọn hành động có giá trị kỳ vọng cao nhất.
+Diễn giải:
+- Khi đã thực hiện hành động $a$ tại trạng thái $s$, ta tiếp tục chọn hành động tối ưu $a'$ tại trạng thái tiếp theo $s'$.
+- Việc lấy giá trị tối đa $\max_{a'} q_*(s', a')$ đảm bảo rằng ta luôn theo chính sách tối ưu.
 
-Các phương trình này đóng vai trò quan trọng trong học tăng cường, đặc biệt trong các thuật toán như Policy Iteration và Q-learning, nơi tác nhân sử dụng các giá trị trạng thái và xác suất chuyển trạng thái để cập nhật chiến lược học tập của mình.
+---
+
+### 5. Mối quan hệ quan trọng giữa các phương trình
+
+- Giữa $v_\pi(s)$ và $q_\pi(s, a)$:
+
+```math
+v_\pi(s) = \sum_{a} \pi(a | s) q_\pi(s, a)
+```
+
+- Giữa $v_*(s)$ và $q_*(s, a)$:
+
+```math
+v_*(s) = \max_{a} q_*(s, a)
+```
+
+- Giữa chính sách tối ưu $\pi_*$ và $q_*$:
+
+```math
+\pi_*(s) = \arg\max_{a} q_*(s, a)
+```
+
+---
+
+### 6. Kết luận
+
+Bài tập 3.29 yêu cầu viết lại các phương trình Bellman bằng cách:
+
+- Biểu diễn chúng theo xác suất chuyển tiếp $p(s',r | s,a)$ và phần thưởng $r(s,a)$.
+- Phân biệt rõ giá trị trạng thái $v$ và giá trị hành động $q$.
+- Chỉ ra sự khác biệt giữa chính sách bất kỳ $\pi$ và chính sách tối ưu $\pi_*$. 
+
+Các phương trình trên là nền tảng của **Dynamic Programming (DP)** và **Reinforcement Learning (RL)**, giúp xác định chính sách tối ưu trong các bài toán ra quyết định tuần tự.
 
 ---
 
