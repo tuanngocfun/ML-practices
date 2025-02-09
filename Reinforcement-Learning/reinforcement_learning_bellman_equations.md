@@ -179,19 +179,61 @@ Phương trình trên cho thấy rằng giá trị của một hành động đ�
 
 **Bài tập 3.24:**
 
-### Kiểm tra giá trị tối ưu trong bài toán lưới ô vuông (Gridworld)
+### Kiểm tra giá trị tối ưu trong bài toán Gridworld
 
-Trong môi trường lưới ô vuông, một tác nhân di chuyển qua các trạng thái để tối đa hóa phần thưởng mong đợi. Giá trị tối ưu $v_*(s)$ có thể được tính toán dựa trên phương trình Bellman:
+#### Mục tiêu:
+
+- Xác minh giá trị tối ưu của trạng thái tốt nhất trong bài toán Gridworld có giá trị $24.4$.
+- Sử dụng phương trình Bellman tối ưu $v_*(s)$ để tính toán giá trị này.
+
+#### 1. Phương trình Bellman tối ưu cho trạng thái
+
+Phương trình Bellman tối ưu cho giá trị trạng thái tối ưu $v_*(s)$ là:
 
 ```math
-v_*(s) = \sum_{a \in A(s)} \pi_*(a | s) \sum_{s', r} p(s', r | s, a) [r + \gamma v_*(s')]
+v_*(s) = \max_{a} \sum_{s',r} p(s',r | s,a) [r + \gamma v_*(s')]
 ```
 
-trong đó:
-- $A(s)$ là tập hợp các hành động có thể thực hiện tại trạng thái $s$.
-- $\pi_*(a | s)$ là xác suất thực hiện hành động $a$ theo chính sách tối ưu.
-- $p(s', r | s, a)$ là xác suất chuyển từ trạng thái $s$ sang $s'$ và nhận phần thưởng $r$.
-- $v_*(s')$ là giá trị trạng thái tối ưu của trạng thái kế tiếp $s'$.
+Trong đó:
+- $v_*(s)$ là giá trị tối ưu của trạng thái $s$.
+- $a$ là hành động tối ưu tại $s$.
+- $p(s',r | s,a)$ là xác suất chuyển từ trạng thái $s$ sang $s'$ với phần thưởng $r$.
+- $\gamma$ là hệ số chiết khấu (discount factor).
+
+#### 2. Áp dụng vào bài toán Gridworld
+
+**Dữ liệu từ bài toán:**
+
+- Trạng thái tối ưu nhất có $v_*(s) = 24.4$.
+- Phần thưởng nhận được khi đi đúng hướng là $r = 10$.
+- Hệ số chiết khấu $\gamma = 0.9$.
+- Giả sử hành động tối ưu chuyển đến trạng thái $s'$ với xác suất $1$.
+
+Theo phương trình Bellman tối ưu:
+
+```math
+v_*(s) = r + \gamma v_*(s')
+```
+
+Thay số:
+
+```math
+24.4 = 10 + 0.9 v_*(s')
+```
+
+Giải ra:
+
+```math
+v_*(s') = \frac{24.4 - 10}{0.9} = \frac{14.4}{0.9} = 16.0
+```
+
+Vậy giá trị tối ưu của trạng thái tiếp theo $s'$ phải là $16.0$ để đảm bảo trạng thái trước đó có giá trị $24.4$.
+
+#### 3. Câu hỏi mở rộng
+
+- Nếu $\gamma$ giảm xuống $0.8$, giá trị tối ưu sẽ thay đổi như thế nào?
+- Nếu phần thưởng $r$ thay đổi theo trạng thái, làm sao để cập nhật phương trình Bellman?
+- Làm thế nào để kiểm tra các trạng thái khác trong Gridworld tuân theo phương trình Bellman tối ưu?
 
 ---
 
