@@ -37,7 +37,7 @@ The policy $\pi$ is an equiprobable random policy, meaning each action has equal
 q_{\pi}(s,a) = \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma v_{\pi}(s') \right]
 ```
 
-Since transitions are deterministic, $p(s', r \mid s, a) = 1$ when moving to $s'$.
+Given $\gamma = 1$ (no discount) and deterministic transitions $p(s', r \mid s, a) = 1$.
 
 3. **Computing $q_{\pi}(11, \text{down})$:**
 
@@ -46,7 +46,7 @@ q_{\pi}(11, \text{down}) = -1 + 1 \cdot v_{\pi}(15) = -1 + 0 = -1
 ```
 
 4. **Computing $q_{\pi}(7, \text{down})$:**
-
+Since state 7 transitions to state 11:
 ```math
 q_{\pi}(7, \text{down}) = -1 + 1 \cdot v_{\pi}(11)
 ```
