@@ -168,3 +168,243 @@ q_{k+1}(s, a) = \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma \sum_{a'} \pi(
 ```
 
 ---
+
+# **Lời giải hoàn chỉnh cho Exercise 4.4: Sửa lỗi Policy Iteration để đảm bảo hội tụ**
+
+## **1. Vấn đề trong thuật toán ban đầu**
+Thuật toán Policy Iteration trong ảnh có thể **không hội tụ** hoặc **dao động vô hạn** nếu có **nhiều hành động có giá trị tối ưu giống nhau**.
+
+- Khi có nhiều hành động đạt **giá trị tối ưu giống nhau**, thuật toán có thể **luân phiên chọn một trong số chúng mà không ổn định**.
+- Điều này làm cho thuật toán **không đảm bảo hội tụ** đến một chính sách cố định.
+
+---
+
+## **2. Cách sửa lỗi**
+Cách khắc phục là **chọn một tiêu chí cố định khi có nhiều hành động tối ưu**.  
+**Có hai cách tiếp cận chính để sửa lỗi:**
+
+### **Cách 1: Luôn chọn hành động nhỏ nhất (hoặc lớn nhất) trong các hành động tối ưu**
+- Thay vì để `argmax_a` chọn một cách tùy ý, ta **luôn chọn hành động có giá trị nhỏ nhất** trong các hành động có giá trị tối ưu.
+- Điều này **duy trì sự ổn định của chính sách** qua các vòng lặp.
+
+#### **Công thức toán học**
+```
+math
+Q^*(s) = \max_a \sum_{s',r} p(s',r | s, a) [r + \gamma V(s')]
+```
+```
+math
+A^*(s) = \{ a | Q(s,a) = Q^*(s) \}
+```
+```
+math
+\pi(s) = \min A^*(s)
+```
+
+#### **Pseudocode**
+```plaintext
+1. Initialization:
+    V(s) ∈ ℝ and π(s) ∈ A(s) arbitrarily for all s ∈ S
+
+2. Policy Evaluation:
+    Loop:
+        Δ ← 0
+        Loop for each s ∈ S:
+            v ← V(s)
+            V(s) ← Σ p(s',r|s,π(s)) [r + γ V(s')]
+            Δ ← max(Δ, |v - V(s)|)
+        until Δ < θ (small positive number determining accuracy)
+
+3. Policy Improvement:
+    policy-stable ← true
+    For each s ∈ S:
+        old-action ← π(s)
+        best_value ← max_a Σ p(s',r|s,a) [r + γ V(s')]
+        best_actions ← {a | Σ p(s',r|s,a) [r + γ V(s')] = best_value}
+        π(s) ← min(best_actions)  # Chọn hành động nhỏ nhất
+        If old-action ≠ π(s), then policy-stable ← false
+    If policy-stable, then stop and return V ≈ v* and π ≈ π*; else go to 2
+```
+
+---
+
+### **Cách 2: Thêm một ngưỡng $\epsilon$ nhỏ để kiểm tra hội tụ**
+```
+math
+Q^*(s) = \max_a \sum_{s',r} p(s',r | s, a) [r + \gamma V(s')]
+```
+```
+math
+A^*(s) = \{ a | Q(s,a) \geq Q^*(s) - \epsilon \}
+```
+```
+math
+\pi(s) = \min A^*(s)
+```
+
+#### **Pseudocode**
+```plaintext
+1. Initialization:
+    V(s) ∈ ℝ and π(s) ∈ A(s) arbitrarily for all s ∈ S
+
+2. Policy Evaluation:
+    Loop:
+        Δ ← 0
+        Loop for each s ∈ S:
+            v ← V(s)
+            V(s) ← Σ p(s',r|s,π(s)) [r + γ V(s')]
+            Δ ← max(Δ, |v - V(s)|)
+        until Δ < θ (small positive number determining accuracy)
+
+3. Policy Improvement:
+    policy-stable ← true
+    For each s ∈ S:
+        old-action ← π(s)
+        best_value ← max_a Σ p(s',r|s,a) [r + γ V(s')]
+        best_actions ← {a | Σ p(s',r|s,a) [r + γ V(s')] ≥ best_value - ε}
+        π(s) ← min(best_actions)  # Chọn hành động nhỏ nhất trong khoảng hội tụ ε
+        If old-action ≠ π(s), then policy-stable ← false
+    If policy-stable, then stop and return V ≈ v* and π ≈ π*; else go to 2
+```
+
+---
+
+## **3. Kết luận**
+✅ **Thuật toán Policy Iteration ban đầu có thể không hội tụ do dao động giữa các hành động tối ưu.**  
+✅ **Chúng ta có thể sửa lỗi bằng cách chọn hành động nhỏ nhất hoặc thêm một ngưỡng $\epsilon$ nhỏ.**  
+✅ **Hai cách tiếp cận đã được trình bày đầy đủ về công thức toán học và pseudocode.**  
+✅ **Cách 1 đơn giản và hiệu quả hơn, trong khi Cách 2 kiểm soát lỗi làm tròn tốt hơn.** 🚀  
+
+# **Lời giải hoàn chỉnh cho Exercise 4.5: Policy Iteration cho Action-Value Function**
+
+## **1. Yêu cầu bài toán**
+Bài tập 4.5 yêu cầu chúng ta điều chỉnh **Policy Iteration** sao cho **làm việc với action-value function $q_*$ thay vì value function $v_*$**.
+
+- Ở **Policy Iteration chuẩn**, ta cập nhật $v(s)$ bằng cách sử dụng chính sách $\pi(s)$, tức là:
+```
+math
+v_{\pi}(s) = \sum_{a} \pi(a|s) \sum_{s',r} p(s',r | s, a) [r + \gamma v_{\pi}(s')]
+```
+- Bây giờ, ta sẽ làm việc với **action-value function**:
+```
+math
+q_{\pi}(s,a) = \sum_{s',r} p(s',r | s, a) [r + \gamma \sum_{a'} \pi(a'|s') q_{\pi}(s', a')]
+```
+- Sau đó, ta cập nhật chính sách $\pi(s)$ dựa trên giá trị tối ưu của hành động.
+
+---
+
+## **2. Công thức toán học**
+### **2.1. Policy Evaluation trên Action-Value Function**
+Tính giá trị $q(s, a)$ bằng cách lặp:
+```
+math
+q_{\pi}(s,a) = \sum_{s',r} p(s',r | s, a) [r + \gamma \sum_{a'} \pi(a'|s') q_{\pi}(s', a')]
+```
+
+### **2.2. Policy Improvement trên Action-Value Function**
+Cập nhật chính sách bằng cách chọn hành động có giá trị $q(s, a)$ cao nhất:
+```
+math
+\pi(s) = \arg\max_a q(s, a)
+```
+
+---
+
+## **3. Pseudocode đầy đủ**
+```plaintext
+1. Initialization:
+    q(s,a) ← 0, ∀s ∈ S, a ∈ A(s)
+    π(s) ← arbitrary action from A(s), ∀s ∈ S
+
+2. Policy Evaluation:
+    Loop:
+        Δ ← 0
+        For each s ∈ S, a ∈ A(s):
+            q_old ← q(s,a)
+            q(s,a) ← Σ p(s',r | s,a) [r + γ Σ π(a'|s') q(s',a')]
+            Δ ← max(Δ, |q_old - q(s,a)|)
+    Until Δ < θ (small positive number determining accuracy)
+
+3. Policy Improvement:
+    policy-stable ← true
+    For each s ∈ S:
+        old_action ← π(s)
+        π(s) ← argmax_a q(s, a)
+        If old_action ≠ π(s), then policy-stable ← false
+    If policy-stable, then stop and return q ≈ q_* and π ≈ π_*; else go to 2
+```
+
+---
+
+## **4. Kết luận**
+✅ **Bài tập yêu cầu chuyển Policy Iteration từ value function sang action-value function**.  
+✅ **Chúng ta đã trình bày đầy đủ công thức toán học và pseudocode để cập nhật $q(s, a)$ thay vì $v(s)$**.  
+✅ **Cách tiếp cận này phù hợp hơn với các thuật toán như Q-learning và giúp tăng khả năng áp dụng trong RL**. 🚀  
+
+# **Lời giải hoàn chỉnh cho Exercise 4.6: Policy Iteration với e-soft Policy**
+
+## **1. Yêu cầu bài toán**
+Bài tập 4.6 yêu cầu chúng ta điều chỉnh thuật toán **Policy Iteration** sao cho **chính sách luôn có xác suất chọn tất cả hành động** thay vì chọn hành động tốt nhất một cách chắc chắn.
+
+- Chính sách chuẩn trong Policy Iteration chọn **hành động tối ưu**:
+```
+math
+\pi(s) = \arg\max_a q(s, a)
+```
+- Trong e-soft policy, ta đảm bảo mọi hành động đều có **xác suất chọn tối thiểu** $\varepsilon / |A(s)|$.
+- Điều này giúp tránh việc thuật toán hội tụ vào một chính sách quá cứng nhắc và cho phép khám phá thêm các hành động khác.
+
+---
+
+## **2. Công thức toán học**
+
+- **Policy Evaluation với e-soft Policy:**
+```
+math
+q_{\pi}(s,a) = \sum_{s',r} p(s',r | s, a) \left[r + \gamma \sum_{a'} \pi(a'|s') q_{\pi}(s', a') \right]
+```
+- **Policy Improvement với e-soft Policy:**
+```
+math
+\pi(a|s) = \begin{cases} 
+1 - \varepsilon + \frac{\varepsilon}{|A(s)|}, & \text{nếu } a = \arg\max_a q(s, a) \\
+\frac{\varepsilon}{|A(s)|}, & \text{nếu } a \neq \arg\max_a q(s, a)
+\end{cases}
+```
+
+---
+
+## **3. Pseudocode đầy đủ**
+```plaintext
+1. Initialization:
+    q(s,a) ← 0, ∀s ∈ S, a ∈ A(s)
+    π(a|s) ← uniform distribution, ∀s ∈ S, a ∈ A(s)
+
+2. Policy Evaluation:
+    Loop:
+        Δ ← 0
+        For each s ∈ S, a ∈ A(s):
+            q_old ← q(s,a)
+            q(s,a) ← Σ p(s',r | s,a) [r + γ Σ π(a'|s') q(s',a')]
+            Δ ← max(Δ, |q_old - q(s,a)|)
+    Until Δ < θ (small positive number determining accuracy)
+
+3. Policy Improvement:
+    policy-stable ← true
+    For each s ∈ S:
+        old_policy ← π(a|s) for all a
+        best_action ← argmax_a q(s, a)
+        For each a ∈ A(s):
+            π(a|s) ← ε / |A(s)|
+        π(best_action|s) ← 1 - ε + (ε / |A(s)|)
+        If old_policy ≠ π(a|s), then policy-stable ← false
+    If policy-stable, then stop and return q ≈ q_* and π ≈ π_*; else go to 2
+```
+
+---
+
+## **4. Kết luận**
+✅ **Bài tập yêu cầu chúng ta thay đổi Policy Iteration để áp dụng e-soft policy thay vì deterministic policy.**  
+✅ **Điều này giúp thuật toán duy trì mức độ khám phá nhất định, tránh hội tụ vào chính sách cứng nhắc.**  
+✅ **Chúng ta đã trình bày đầy đủ công thức toán học và pseudocode để đảm bảo thuật toán tuân thủ yêu cầu.** 🚀  
