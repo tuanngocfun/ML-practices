@@ -339,12 +339,13 @@ Update the policy by selecting the action with the highest $q(s, a)$ value:
 ✅ **We provided the full mathematical formulation and pseudocode to update $q(s, a)$ instead of $v(s)$.**  
 ✅ **This approach is more applicable to algorithms like Q-learning and enhances adaptability in Reinforcement Learning.** 🚀
 
-# **Lời giải hoàn chỉnh cho Exercise 4.6: Policy Iteration với e-soft Policy**
+# **Complete Solution for Exercise 4.6: Policy Iteration with e-soft Policy**
 
-## **1. Yêu cầu bài toán**
-Bài tập 4.6 yêu cầu chúng ta điều chỉnh thuật toán **Policy Iteration** sao cho **chính sách luôn có xác suất chọn tất cả hành động** thay vì chọn hành động tốt nhất một cách chắc chắn.
+## **1. Problem Statement**
+Exercise 4.6 requires modifying **Policy Iteration** to ensure that the policy always assigns a probability to all actions rather than selecting only the optimal action.
 
-- Chính sách chuẩn trong Policy Iteration chọn **hành động tối ưu**:
+- In standard Policy Iteration, the policy selects the **best action** deterministically:
+
 ```math
 \pi(s) = \arg\max_a q(s, a)
 ```
@@ -398,7 +399,7 @@ q_{\pi}(s,a) = \sum_{s',r} p(s',r | s, a) \left[r + \gamma \sum_{a'} \pi(a'|s') 
 
 ---
 
-## **4. Kết luận**
-✅ **Bài tập yêu cầu chúng ta thay đổi Policy Iteration để áp dụng e-soft policy thay vì deterministic policy.**  
-✅ **Điều này giúp thuật toán duy trì mức độ khám phá nhất định, tránh hội tụ vào chính sách cứng nhắc.**  
-✅ **Chúng ta đã trình bày đầy đủ công thức toán học và pseudocode để đảm bảo thuật toán tuân thủ yêu cầu.** 🚀  
+## **4. Conclusion**
+✅ **Exercise 4.6 requires modifying Policy Iteration to use an e-soft policy instead of a deterministic policy.**  
+✅ **This ensures the policy maintains some level of exploration and does not converge too rigidly.**  
+✅ **The full mathematical formulation and pseudocode ensure the algorithm follows the specified requirements.** 🚀
