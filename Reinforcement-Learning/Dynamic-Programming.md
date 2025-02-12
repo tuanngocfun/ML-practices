@@ -169,25 +169,27 @@ q_{k+1}(s, a) = \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma \sum_{a'} \pi(
 
 ---
 
-# **Lời giải hoàn chỉnh cho Exercise 4.4: Sửa lỗi Policy Iteration để đảm bảo hội tụ**
+# **Complete Solution for Exercise 4.4: Fixing Policy Iteration to Ensure Convergence**
 
-## **1. Vấn đề trong thuật toán ban đầu**
-Thuật toán Policy Iteration trong ảnh có thể **không hội tụ** hoặc **dao động vô hạn** nếu có **nhiều hành động có giá trị tối ưu giống nhau**.
+Change
+2 of 11
+## **1. Problem in the Original Algorithm**
+The Policy Iteration algorithm may **not converge** or **oscillate indefinitely** if there are **multiple actions with the same optimal value**.
 
-- Khi có nhiều hành động đạt **giá trị tối ưu giống nhau**, thuật toán có thể **luân phiên chọn một trong số chúng mà không ổn định**.
-- Điều này làm cho thuật toán **không đảm bảo hội tụ** đến một chính sách cố định.
+- When multiple actions have **the same optimal value**, the algorithm may **keep switching between them without stabilizing**.
+- This prevents the algorithm from **converging** to a fixed policy.
 
 ---
 
-## **2. Cách sửa lỗi**
-Cách khắc phục là **chọn một tiêu chí cố định khi có nhiều hành động tối ưu**.  
-**Có hai cách tiếp cận chính để sửa lỗi:**
+## **2. Fixing the Issue**
+The fix is to **select a fixed criterion when multiple actions are optimal**.  
+**Two main approaches to resolve the issue:**
 
-### **Cách 1: Luôn chọn hành động nhỏ nhất (hoặc lớn nhất) trong các hành động tối ưu**
-- Thay vì để `argmax_a` chọn một cách tùy ý, ta **luôn chọn hành động có giá trị nhỏ nhất** trong các hành động có giá trị tối ưu.
-- Điều này **duy trì sự ổn định của chính sách** qua các vòng lặp.
+### **Approach 1: Always Choose the Smallest (or Largest) Action Among Optimal Actions**
+- Instead of letting `argmax_a` select arbitrarily, **always choose the smallest action** among those with the optimal value.
+- This **maintains policy stability** across iterations.
 
-#### **Công thức toán học**
+#### **Mathematical Formulation**
 ```math
 Q^*(s) = \max_a \sum_{s',r} p(s',r | s, a) [r + \gamma V(s')]
 ```
@@ -220,14 +222,14 @@ A^*(s) = \{ a | Q(s,a) = Q^*(s) \}
         old-action ← π(s)
         best_value ← max_a Σ p(s',r|s,a) [r + γ V(s')]
         best_actions ← {a | Σ p(s',r|s,a) [r + γ V(s')] = best_value}
-        π(s) ← min(best_actions)  # Chọn hành động nhỏ nhất
+        π(s) ← min(best_actions)  # Choose the smallest action
         If old-action ≠ π(s), then policy-stable ← false
     If policy-stable, then stop and return V ≈ v* and π ≈ π*; else go to 2
 ```
 
 ---
 
-### **Cách 2: Thêm một ngưỡng $\epsilon$ nhỏ để kiểm tra hội tụ**
+### **Approach 2: Add a Small Threshold $\epsilon$ to Check for Convergence**
 ```math
 Q^*(s) = \max_a \sum_{s',r} p(s',r | s, a) [r + \gamma V(s')]
 ```
@@ -260,53 +262,53 @@ A^*(s) = \{ a | Q(s,a) \geq Q^*(s) - \epsilon \}
         old-action ← π(s)
         best_value ← max_a Σ p(s',r|s,a) [r + γ V(s')]
         best_actions ← {a | Σ p(s',r|s,a) [r + γ V(s')] ≥ best_value - ε}
-        π(s) ← min(best_actions)  # Chọn hành động nhỏ nhất trong khoảng hội tụ ε
+        π(s) ← min(best_actions)  # Choose the smallest action within ε threshold
         If old-action ≠ π(s), then policy-stable ← false
     If policy-stable, then stop and return V ≈ v* and π ≈ π*; else go to 2
 ```
 
 ---
 
-## **3. Kết luận**
-✅ **Thuật toán Policy Iteration ban đầu có thể không hội tụ do dao động giữa các hành động tối ưu.**  
-✅ **Chúng ta có thể sửa lỗi bằng cách chọn hành động nhỏ nhất hoặc thêm một ngưỡng $\epsilon$ nhỏ.**  
-✅ **Hai cách tiếp cận đã được trình bày đầy đủ về công thức toán học và pseudocode.**  
-✅ **Cách 1 đơn giản và hiệu quả hơn, trong khi Cách 2 kiểm soát lỗi làm tròn tốt hơn.** 🚀  
+## **3. Conclusion**
+✅ **The original Policy Iteration algorithm may fail to converge due to oscillations among optimal actions.**  
+✅ **We can fix this by always selecting the smallest action or introducing a small threshold $\epsilon$.**  
+✅ **Both approaches are fully presented with mathematical formulas and pseudocode.**  
+✅ **Approach 1 is simpler and more efficient, while Approach 2 handles rounding errors better.** 🚀  
 
-# **Lời giải hoàn chỉnh cho Exercise 4.5: Policy Iteration cho Action-Value Function**
+# **Complete Solution for Exercise 4.5: Policy Iteration for Action-Value Function**
 
-## **1. Yêu cầu bài toán**
-Bài tập 4.5 yêu cầu chúng ta điều chỉnh **Policy Iteration** sao cho **làm việc với action-value function $q_*$ thay vì value function $v_*$**.
+## **1. Problem Statement**
+Exercise 4.5 requires us to modify **Policy Iteration** to work with the **action-value function $q_*$ instead of the value function $v_*$**.
 
-- Ở **Policy Iteration chuẩn**, ta cập nhật $v(s)$ bằng cách sử dụng chính sách $\pi(s)$, tức là:
+- In **standard Policy Iteration**, we update $v(s)$ using the policy $\pi(s)$:
 ```math
 v_{\pi}(s) = \sum_{a} \pi(a|s) \sum_{s',r} p(s',r | s, a) [r + \gamma v_{\pi}(s')]
 ```
-- Bây giờ, ta sẽ làm việc với **action-value function**:
-- 
+- Now, we will work with the **action-value function**:
 ```math
 q_{\pi}(s,a) = \sum_{s',r} p(s',r | s, a) [r + \gamma \sum_{a'} \pi(a'|s') q_{\pi}(s', a')]
 ```
-- Sau đó, ta cập nhật chính sách $\pi(s)$ dựa trên giá trị tối ưu của hành động.
+- Then, we update the policy $\pi(s)$ based on the optimal action value.
 
 ---
 
-## **2. Công thức toán học**
-### **2.1. Policy Evaluation trên Action-Value Function**
-Tính giá trị $q(s, a)$ bằng cách lặp:
+## **2. Mathematical Formulation**
+
+### **2.1. Policy Evaluation on Action-Value Function**
+Compute $q(s, a)$ iteratively:
 ```math
 q_{\pi}(s,a) = \sum_{s',r} p(s',r | s, a) [r + \gamma \sum_{a'} \pi(a'|s') q_{\pi}(s', a')]
 ```
 
-### **2.2. Policy Improvement trên Action-Value Function**
-Cập nhật chính sách bằng cách chọn hành động có giá trị $q(s, a)$ cao nhất:
+### **2.2. Policy Improvement on Action-Value Function**
+Update the policy by selecting the action with the highest $q(s, a)$ value:
 ```math
 \pi(s) = \arg\max_a q(s, a)
 ```
 
 ---
 
-## **3. Pseudocode đầy đủ**
+## **3. Complete Pseudocode**
 ```plaintext
 1. Initialization:
     q(s,a) ← 0, ∀s ∈ S, a ∈ A(s)
@@ -332,10 +334,10 @@ Cập nhật chính sách bằng cách chọn hành động có giá trị $q(s,
 
 ---
 
-## **4. Kết luận**
-✅ **Bài tập yêu cầu chuyển Policy Iteration từ value function sang action-value function**.  
-✅ **Chúng ta đã trình bày đầy đủ công thức toán học và pseudocode để cập nhật $q(s, a)$ thay vì $v(s)$**.  
-✅ **Cách tiếp cận này phù hợp hơn với các thuật toán như Q-learning và giúp tăng khả năng áp dụng trong RL**. 🚀  
+## **4. Conclusion**
+✅ **The exercise requires modifying Policy Iteration to work with action-value functions instead of state-value functions.**  
+✅ **We provided the full mathematical formulation and pseudocode to update $q(s, a)$ instead of $v(s)$.**  
+✅ **This approach is more applicable to algorithms like Q-learning and enhances adaptability in Reinforcement Learning.** 🚀
 
 # **Lời giải hoàn chỉnh cho Exercise 4.6: Policy Iteration với e-soft Policy**
 
