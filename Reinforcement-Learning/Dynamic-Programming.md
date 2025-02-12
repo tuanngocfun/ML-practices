@@ -3,6 +3,7 @@
 [![Screenshot-from-2025-02-11-15-55-28.png](https://i.postimg.cc/bvzGYPMj/Screenshot-from-2025-02-11-15-55-28.png)](https://postimg.cc/DSMf59nC)
 
 The nonterminal states are $S = \{1,2,\dots,14\}$. There are four actions possible in each state, $A = \{\text{up}, \text{down}, \text{right}, \text{left}\}$, which deterministically cause the corresponding state transitions, except that actions that would take the agent off the grid in fact leave the state unchanged. Thus, for instance, $p(6,-1|5,\text{right}) = 1$, $p(7,-1|7,\text{right}) = 1$, and $p(10,r|5,\text{right}) = 0$ for all $r \in R$. This is an undiscounted, episodic task. The reward is $-1$ on all transitions until the terminal state is reached. The terminal state is shaded in the figure (although it is shown in two places, it is formally one state). The expected reward function is thus $r(s,a,s') = -1$ for all states $s$, $s'$ and actions $a$. Suppose the agent follows the equiprobable random policy (all actions equally likely). The left side of Figure 4.1 shows the sequence of value functions $\{v_k\}$ computed by iterative policy evaluation. The final estimate is in fact $v_\pi$, which in this case gives for each state the negation of the expected number of steps from that state until termination.
+
 [![Screenshot-from-2025-02-11-17-09-54.png](https://i.postimg.cc/BbxQDFT8/Screenshot-from-2025-02-11-17-09-54.png)](https://postimg.cc/4HxgRmFZ)
 ---
 
@@ -122,10 +123,10 @@ v_{\pi}(13) = \frac{1}{4} (-1 -2 -1 -1 + v_{\pi}(15))
 v_{\pi}(15) = -2
 ```
 ✅ **Final Answers for Exercise 4.2:**
-```math
-	ext{Case 1: } v_{\pi}(15) = -3
-	ext{Case 2: } v_{\pi}(15) = -2
-```
+
+- $v_{\pi}(15) = -3$
+- $v_{\pi}(15) = -2$
+
 
 ---
 
