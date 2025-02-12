@@ -188,16 +188,15 @@ Cách khắc phục là **chọn một tiêu chí cố định khi có nhiều h
 - Điều này **duy trì sự ổn định của chính sách** qua các vòng lặp.
 
 #### **Công thức toán học**
-```
-math
+```math
 Q^*(s) = \max_a \sum_{s',r} p(s',r | s, a) [r + \gamma V(s')]
 ```
-```
-math
+
+```math
 A^*(s) = \{ a | Q(s,a) = Q^*(s) \}
 ```
-```
-math
+
+```math
 \pi(s) = \min A^*(s)
 ```
 
@@ -229,16 +228,15 @@ math
 ---
 
 ### **Cách 2: Thêm một ngưỡng $\epsilon$ nhỏ để kiểm tra hội tụ**
-```
-math
+```math
 Q^*(s) = \max_a \sum_{s',r} p(s',r | s, a) [r + \gamma V(s')]
 ```
-```
-math
+
+```math
 A^*(s) = \{ a | Q(s,a) \geq Q^*(s) - \epsilon \}
 ```
-```
-math
+
+```math
 \pi(s) = \min A^*(s)
 ```
 
@@ -281,13 +279,12 @@ math
 Bài tập 4.5 yêu cầu chúng ta điều chỉnh **Policy Iteration** sao cho **làm việc với action-value function $q_*$ thay vì value function $v_*$**.
 
 - Ở **Policy Iteration chuẩn**, ta cập nhật $v(s)$ bằng cách sử dụng chính sách $\pi(s)$, tức là:
-```
-math
+```math
 v_{\pi}(s) = \sum_{a} \pi(a|s) \sum_{s',r} p(s',r | s, a) [r + \gamma v_{\pi}(s')]
 ```
 - Bây giờ, ta sẽ làm việc với **action-value function**:
-```
-math
+- 
+```math
 q_{\pi}(s,a) = \sum_{s',r} p(s',r | s, a) [r + \gamma \sum_{a'} \pi(a'|s') q_{\pi}(s', a')]
 ```
 - Sau đó, ta cập nhật chính sách $\pi(s)$ dựa trên giá trị tối ưu của hành động.
@@ -297,15 +294,13 @@ q_{\pi}(s,a) = \sum_{s',r} p(s',r | s, a) [r + \gamma \sum_{a'} \pi(a'|s') q_{\p
 ## **2. Công thức toán học**
 ### **2.1. Policy Evaluation trên Action-Value Function**
 Tính giá trị $q(s, a)$ bằng cách lặp:
-```
-math
+```math
 q_{\pi}(s,a) = \sum_{s',r} p(s',r | s, a) [r + \gamma \sum_{a'} \pi(a'|s') q_{\pi}(s', a')]
 ```
 
 ### **2.2. Policy Improvement trên Action-Value Function**
 Cập nhật chính sách bằng cách chọn hành động có giá trị $q(s, a)$ cao nhất:
-```
-math
+```math
 \pi(s) = \arg\max_a q(s, a)
 ```
 
@@ -348,8 +343,7 @@ math
 Bài tập 4.6 yêu cầu chúng ta điều chỉnh thuật toán **Policy Iteration** sao cho **chính sách luôn có xác suất chọn tất cả hành động** thay vì chọn hành động tốt nhất một cách chắc chắn.
 
 - Chính sách chuẩn trong Policy Iteration chọn **hành động tối ưu**:
-```
-math
+```math
 \pi(s) = \arg\max_a q(s, a)
 ```
 - Trong e-soft policy, ta đảm bảo mọi hành động đều có **xác suất chọn tối thiểu** $\varepsilon / |A(s)|$.
@@ -360,13 +354,11 @@ math
 ## **2. Công thức toán học**
 
 - **Policy Evaluation với e-soft Policy:**
-```
-math
+```math
 q_{\pi}(s,a) = \sum_{s',r} p(s',r | s, a) \left[r + \gamma \sum_{a'} \pi(a'|s') q_{\pi}(s', a') \right]
 ```
 - **Policy Improvement với e-soft Policy:**
-```
-math
+```math
 \pi(a|s) = \begin{cases} 
 1 - \varepsilon + \frac{\varepsilon}{|A(s)|}, & \text{nếu } a = \arg\max_a q(s, a) \\
 \frac{\varepsilon}{|A(s)|}, & \text{nếu } a \neq \arg\max_a q(s, a)
