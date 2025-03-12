@@ -111,4 +111,3 @@ Since `595` is near `600`, center is **close to 3/4 height**.
 
 The bounding box center **(0.8, 0.74375)** is **correctly calculated** and represents a position near the **bottom right** of the image.
 
-If visualization code is needed for further confirmation, it can be provided upon request.
